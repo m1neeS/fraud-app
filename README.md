@@ -91,32 +91,34 @@ Optimasi threshold prediksi (default 0.5) untuk menyeimbangkan:
 
 | Metrik | Score |
 |--------|-------|
-| **Precision** | 94.12% |
-| **Recall** | 81.63% |
-| **F1-Score** | 87.43% |
+| **Precision** | 94% |
+| **Recall** | 82% |
+| **F1-Score** | 87% |
 | **Optimal Threshold** | 0.45 |
 
 **Interpretasi:**
-- **Precision 94.12%:** Dari 100 transaksi yang diprediksi fraud, 94 benar-benar fraud
-- **Recall 81.63%:** Dari 100 transaksi fraud sebenarnya, model berhasil mendeteksi 82
-- **F1-Score 87.43%:** Keseimbangan baik antara precision dan recall
+- **Precision 94%:** Dari 100 transaksi yang diprediksi fraud, 94 benar-benar fraud
+- **Recall 82%:** Dari 100 transaksi fraud sebenarnya, model berhasil mendeteksi 82
+- **F1-Score 87%:** Keseimbangan baik antara precision dan recall
 
 ### Perbandingan Model
 
 | Model | Precision | Recall | F1-Score |
 |-------|-----------|--------|----------|
-| Logistic Regression | 88.5% | 62.2% | 73.1% |
-| **Random Forest** | **94.1%** | **81.6%** | **87.4%** |
-| XGBoost | 92.3% | 79.6% | 85.5% |
+| Logistic Regression | 88% | 62% | 73% |
+| **Random Forest (Baseline)** | **94%** | **82%** | **87%** |
+| XGBoost | 92% | 80% | 86% |
 
 ### Feature Importance
 
 Top 5 fitur paling berpengaruh:
-1. V17 (18.2%)
-2. V14 (15.7%)
-3. V12 (12.4%)
-4. V10 (9.8%)
-5. V16 (8.3%)
+1. **V17** - Fitur paling penting dalam mendeteksi fraud
+2. **V14** - Kontribusi signifikan untuk klasifikasi
+3. **V12** - Pola transaksi mencurigakan
+4. **V10** - Indikator fraud yang kuat
+5. **V11** - Membantu membedakan fraud vs normal
+
+**Catatan:** V1-V28 adalah hasil transformasi PCA untuk menjaga privasi data nasabah.
 
 ## 🚀 Cara Menjalankan Proyek
 
@@ -144,15 +146,21 @@ Download dataset dari [Kaggle](https://www.kaggle.com/mlg-ulb/creditcardfraud):
 jupyter notebook
 ```
 Buka dan jalankan notebook secara berurutan:
-1. `01_eda.ipynb`
-2. `02_modeling.ipynb`
-3. `03_FinalModel.ipynb`
+1. `01_eda.ipynb` - Exploratory Data Analysis
+2. `02_modeling.ipynb` - Model Training & Comparison
+3. `03_FinalModel.ipynb` - Final Model & Export
 
 ### 5. Jalankan Aplikasi Web
 ```bash
 streamlit run app.py
 ```
 Aplikasi akan terbuka di browser pada `http://localhost:8501`
+
+## 🌐 Live Demo
+
+**Streamlit App:** [Coming Soon]
+
+Aplikasi web interaktif untuk mencoba model fraud detection secara real-time.
 
 ## 💻 Fitur Aplikasi Web
 
@@ -229,27 +237,29 @@ Time,V1,V2,V3,...,V28,Amount
 ### 4. Best Model Evaluation
 ![Best Model Evaluation](figures/best_model_evaluation.png)
 
-## 🔍 Insight & Pembelajaran
+## 🔍 Key Learnings & Insights
 
-### 1. Class Imbalance
-- Dataset sangat imbalanced (577:1)
-- Teknik handling: SMOTE, Under-sampling, Class Weight
-- Random Forest dengan class weight memberikan hasil terbaik
+### 1. ⚠️ Akurasi 99% Bisa Menyesatkan
+Pada data imbalanced, akurasi tinggi tidak berarti model bagus. Model yang menebak semua transaksi sebagai "Normal" akan mendapat akurasi 99.8% - tapi tidak berguna sama sekali! 
 
-### 2. Metrik Evaluasi
-- Accuracy tidak cocok untuk imbalanced data
-- Fokus pada Precision, Recall, F1-Score
-- PR-AUC lebih informatif daripada ROC-AUC
+**Solusi:** Gunakan Precision, Recall, dan F1-Score sebagai metrik utama.
 
-### 3. Threshold Tuning
-- Default threshold (0.5) tidak selalu optimal
-- Threshold 0.45 memberikan balance terbaik
-- Trade-off: Recall tinggi vs Precision tinggi
+### 2. ⚖️ Trade-off Precision vs Recall
+Tidak bisa dapat keduanya sempurna. Pilih berdasarkan business cost:
+- **High Precision:** Kurangi false alarm (transaksi normal yang salah ditandai)
+- **High Recall:** Tangkap lebih banyak fraud (meski ada false alarm)
 
-### 4. Feature Engineering
-- Fitur V (hasil PCA) sudah optimal
-- Scaling Amount dan Time penting
-- Feature importance membantu interpretasi
+**Keputusan:** Pilih berdasarkan risk appetite bisnis.
+
+### 3. ✅ Simple Model Kadang Lebih Baik
+Random Forest baseline mengalahkan XGBoost dengan SMOTE yang lebih kompleks.
+
+**Insight:** Kompleksitas ≠ Performa. Start simple, iterate if needed.
+
+### 4. 🎯 Threshold adalah Business Decision
+Default threshold 0.5 tidak optimal. Threshold 0.45 memberikan balance terbaik antara Precision dan Recall.
+
+**Lesson:** Sesuaikan threshold dengan risk appetite dan business requirements.
 
 ## 🎓 Pengembangan Lebih Lanjut
 
@@ -274,13 +284,19 @@ Dataset: [Open Database License (ODbL)](https://opendatacommons.org/licenses/odb
 
 ## 👥 Kontributor
 
-- **m1neeS** - Initial work
+- **m1neeS** - Machine Learning Engineer
 
-## 📧 Kontak
+## 📧 Kontak & Links
 
-Untuk pertanyaan atau saran, silakan hubungi:
-- GitHub: [m1neeS](https://github.com/m1neeS)
-- Repository: [fraud-app](https://github.com/m1neeS/fraud-app)
+**GitHub Repository:** [fraud-app](https://github.com/m1neeS/fraud-app)
+
+**Live Demo:** [Streamlit App - Coming Soon]
+
+**Connect:**
+- GitHub: [@m1neeS](https://github.com/m1neeS)
+- LinkedIn: [Add your LinkedIn profile]
+
+Untuk pertanyaan, saran, atau kolaborasi, silakan buka issue di GitHub atau hubungi melalui LinkedIn.
 
 ## 🙏 Acknowledgments
 
