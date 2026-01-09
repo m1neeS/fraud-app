@@ -1,5 +1,9 @@
 # 🔍 Credit Card Fraud Detection
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fraud-app.streamlit.app)
+[![GitHub](https://img.shields.io/badge/GitHub-m1neeS%2Ffraud--app-blue?logo=github)](https://github.com/m1neeS/fraud-app)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python)](https://www.python.org/)
+
 Sistem deteksi fraud pada transaksi kartu kredit menggunakan Machine Learning. Proyek ini membangun model klasifikasi untuk mengidentifikasi transaksi yang mencurigakan dengan tingkat akurasi tinggi.
 
 ## 📊 Dataset
@@ -158,9 +162,17 @@ Aplikasi akan terbuka di browser pada `http://localhost:8501`
 
 ## 🌐 Live Demo
 
-**Streamlit App:** [Coming Soon]
+**🚀 Streamlit App:** [https://fraud-app-m1nees.streamlit.app](https://fraud-app-m1nees.streamlit.app/)
 
 Aplikasi web interaktif untuk mencoba model fraud detection secara real-time.
+
+**Fitur yang tersedia:**
+- ✅ Upload CSV untuk batch prediction
+- ✅ Threshold adjustment (slider di sidebar)
+- ✅ Model information & metrics
+- ⚠️ Demo sample (memerlukan dataset lokal - tidak tersedia di cloud)
+
+**Catatan:** Fitur demo sample tidak tersedia di deployment karena ukuran dataset (143 MB). Gunakan fitur "Upload CSV" untuk testing dengan data Anda sendiri.
 
 ## 💻 Fitur Aplikasi Web
 
@@ -288,9 +300,9 @@ Dataset: [Open Database License (ODbL)](https://opendatacommons.org/licenses/odb
 
 ## 📧 Kontak & Links
 
-**GitHub Repository:** [fraud-app](https://github.com/m1neeS/fraud-app)
+**🌐 Live Demo:** [https://fraud-app-m1nees.streamlit.app](https://fraud-app-m1nees.streamlit.app/)
 
-**Live Demo:** [Streamlit App](https://fraud-app-m1nees.streamlit.app/)
+**📂 GitHub Repository:** [fraud-app](https://github.com/m1neeS/fraud-app)
 
 **Connect:**
 - GitHub: [@m1neeS](https://github.com/m1neeS)
