@@ -376,9 +376,9 @@ with tab4:
     
     | Metric | Score |
     |--------|-------|
-    | Precision | 94.12% |
-    | Recall | 81.63% |
-    | F1-Score | 87.43% |
+    | Precision | 94% |
+    | Recall | 82% |
+    | F1-Score | 87% |
     | Optimal Threshold | 0.45 |
     
     ### Tech Stack
@@ -387,9 +387,19 @@ with tab4:
     - Scikit-learn, XGBoost, Imbalanced-learn
     - Streamlit (UI)
     
-    ### Repository
+    ### Links
     
-    [GitHub Link - Tambahkan link repository di sini]
+    - **GitHub Repository:** [github.com/m1neeS/fraud-app](https://github.com/m1neeS/fraud-app)
+    - **Live Demo:** [fraud-app-m1nees.streamlit.app](https://fraud-app-m1nees.streamlit.app/)
+    - **Developer:** [Muhamad Surhes Anggrhesta](https://www.linkedin.com/in/muhamadsurhes/)
+    
+    ### About Developer
+    
+    Machine Learning enthusiast focusing on practical applications of AI in solving real-world problems.
+    
+    **Connect:**
+    - LinkedIn: [linkedin.com/in/muhamadsurhes](https://www.linkedin.com/in/muhamadsurhes/)
+    - GitHub: [github.com/m1neeS](https://github.com/m1neeS)
     """)
 
 # =============================================
@@ -399,7 +409,12 @@ st.markdown("---")
 st.markdown(
     """
     <div style='text-align: center; color: gray;'>
-        Fraud Detection System | Machine Learning Project
+        <p>Fraud Detection System | Machine Learning Project</p>
+        <p>Built by <a href='https://www.linkedin.com/in/muhamadsurhes/' target='_blank' style='color: #0077b5; text-decoration: none;'>Muhamad Surhes Anggrhesta</a></p>
+        <p>
+            <a href='https://github.com/m1neeS/fraud-app' target='_blank' style='color: gray; text-decoration: none; margin: 0 10px;'>GitHub</a> | 
+            <a href='https://www.linkedin.com/in/muhamadsurhes/' target='_blank' style='color: gray; text-decoration: none; margin: 0 10px;'>LinkedIn</a>
+        </p>
     </div>
     """,
     unsafe_allow_html=True
