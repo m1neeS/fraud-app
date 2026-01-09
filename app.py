@@ -50,10 +50,16 @@ def predict_fraud(transaction_data, threshold=None):
 # =============================================
 @st.cache_data
 def load_sample_data():
-    df = pd.read_csv('data/creditcard.csv')
-    return df
+    try:
+        df = pd.read_csv('data/creditcard.csv')
+        return df
+    except FileNotFoundError:
+        return None
 
 df = load_sample_data()
+
+# Check if dataset is available
+dataset_available = df is not None
 
 # =============================================
 # SIDEBAR
@@ -83,6 +89,10 @@ st.sidebar.markdown(f"""
 # =============================================
 st.title("🔍 Credit Card Fraud Detection")
 st.markdown("Sistem deteksi transaksi kartu kredit yang mencurigakan menggunakan Machine Learning.")
+
+if not dataset_available:
+    st.info("ℹ️ **Mode Demo Terbatas:** Dataset tidak tersedia. Gunakan tab 'Upload CSV' untuk prediksi.")
+
 st.markdown("---")
 
 # =============================================
@@ -95,70 +105,82 @@ tab1, tab2, tab3, tab4 = st.tabs(["Demo Prediksi", "Upload CSV", "Cara Penggunaa
 # =============================================
 with tab1:
     st.header("Demo Prediksi")
-    st.markdown("Pilih sample transaksi untuk melihat hasil prediksi model.")
     
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        sample_type = st.selectbox(
-            "Pilih Jenis Sample",
-            ["Random Normal", "Random Fraud", "Random Transaksi"]
-        )
+    if not dataset_available:
+        st.warning("⚠️ Dataset tidak tersedia. Fitur demo sample memerlukan file `data/creditcard.csv`")
+        st.info("""
+        **Untuk menggunakan fitur demo:**
+        1. Download dataset dari [Kaggle](https://www.kaggle.com/mlg-ulb/creditcardfraud)
+        2. Letakkan file `creditcard.csv` di folder `data/`
+        3. Restart aplikasi
         
-        if st.button("Generate Sample", use_container_width=True):
-            if sample_type == "Random Normal":
-                sample = df[df['Class'] == 0].sample(1).iloc[0]
-            elif sample_type == "Random Fraud":
-                sample = df[df['Class'] == 1].sample(1).iloc[0]
-            else:
-                sample = df.sample(1).iloc[0]
-            
-            st.session_state['current_sample'] = sample
-    
-    with col2:
-        if 'current_sample' in st.session_state:
-            sample = st.session_state['current_sample']
-            actual_label = "FRAUD" if sample['Class'] == 1 else "NORMAL"
-            
-            st.markdown(f"**Amount:** ${sample['Amount']:.2f}")
-            st.markdown(f"**Time:** {sample['Time']:.0f} detik")
-            st.markdown(f"**Label Asli:** {actual_label}")
-    
-    st.markdown("---")
-    
-    if 'current_sample' in st.session_state:
-        sample = st.session_state['current_sample']
+        **Alternatif:** Gunakan tab "Upload CSV" untuk prediksi dengan data Anda sendiri.
+        """)
+    else:
+        st.markdown("Pilih sample transaksi untuk melihat hasil prediksi model.")
         
-        # Siapkan data untuk prediksi
-        transaction = sample.drop('Class').to_dict()
-        
-        # Prediksi
-        prediction, probability = predict_fraud(transaction, threshold)
-        
-        # Tampilkan hasil
-        col1, col2, col3 = st.columns(3)
+        col1, col2 = st.columns(2)
         
         with col1:
-            if prediction == 1:
-                st.error("### FRAUD DETECTED")
-            else:
-                st.success("### NORMAL")
+            sample_type = st.selectbox(
+                "Pilih Jenis Sample",
+                ["Random Normal", "Random Fraud", "Random Transaksi"]
+            )
+            
+            if st.button("Generate Sample", use_container_width=True):
+                if sample_type == "Random Normal":
+                    sample = df[df['Class'] == 0].sample(1).iloc[0]
+                elif sample_type == "Random Fraud":
+                    sample = df[df['Class'] == 1].sample(1).iloc[0]
+                else:
+                    sample = df.sample(1).iloc[0]
+                
+                st.session_state['current_sample'] = sample
         
         with col2:
-            st.metric("Probabilitas Fraud", f"{probability*100:.2f}%")
+            if 'current_sample' in st.session_state:
+                sample = st.session_state['current_sample']
+                actual_label = "FRAUD" if sample['Class'] == 1 else "NORMAL"
+                
+                st.markdown(f"**Amount:** ${sample['Amount']:.2f}")
+                st.markdown(f"**Time:** {sample['Time']:.0f} detik")
+                st.markdown(f"**Label Asli:** {actual_label}")
         
-        with col3:
-            st.metric("Threshold", f"{threshold*100:.0f}%")
+        st.markdown("---")
         
-        # Progress bar probabilitas
-        st.markdown("**Confidence Level:**")
-        st.progress(probability)
-        
-        # Detail V features (collapsible)
-        with st.expander("Lihat Detail Fitur"):
-            v_features = {k: v for k, v in transaction.items() if k.startswith('V')}
-            v_df = pd.DataFrame([v_features])
-            st.dataframe(v_df, use_container_width=True)
+        if 'current_sample' in st.session_state:
+            sample = st.session_state['current_sample']
+            
+            # Siapkan data untuk prediksi
+            transaction = sample.drop('Class').to_dict()
+            
+            # Prediksi
+            prediction, probability = predict_fraud(transaction, threshold)
+            
+            # Tampilkan hasil
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                if prediction == 1:
+                    st.error("### FRAUD DETECTED")
+                else:
+                    st.success("### NORMAL")
+            
+            with col2:
+                st.metric("Probabilitas Fraud", f"{probability*100:.2f}%")
+            
+            with col3:
+                st.metric("Threshold", f"{threshold*100:.0f}%")
+            
+            # Progress bar probabilitas
+            st.markdown("**Confidence Level:**")
+            st.progress(probability)
+            
+            # Detail V features (collapsible)
+            with st.expander("Lihat Detail Fitur"):
+                v_features = {k: v for k, v in transaction.items() if k.startswith('V')}
+                v_df = pd.DataFrame([v_features])
+                st.dataframe(v_df, use_container_width=True)
 
 # =============================================
 # TAB 2: UPLOAD CSV
