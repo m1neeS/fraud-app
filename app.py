@@ -209,7 +209,12 @@ with tab2:
     if uploaded_file is not None:
         try:
             df_upload = pd.read_csv(uploaded_file)
-            st.markdown(f"**Total transaksi:** {len(df_upload):,}")
+            total_rows = len(df_upload)
+            st.markdown(f"**Total transaksi:** {total_rows:,}")
+            
+            # Warning untuk file besar
+            if total_rows > 10000:
+                st.warning(f"⚠️ File berisi {total_rows:,} transaksi. Proses prediksi akan memakan waktu ~{total_rows//1000} menit. Pertimbangkan menggunakan sample data untuk testing cepat.")
             
             # Cek kolom yang dibutuhkan
             required_cols = ['Time', 'Amount'] + [f'V{i}' for i in range(1, 29)]
@@ -219,35 +224,59 @@ with tab2:
                 st.error(f"Kolom tidak lengkap. Kurang: {missing_cols}")
             else:
                 if st.button("Jalankan Prediksi", use_container_width=True):
-                    with st.spinner("Memproses..."):
-                        results = []
-                        for idx, row in df_upload.iterrows():
-                            transaction = row.to_dict()
-                            if 'Class' in transaction:
-                                del transaction['Class']
-                            pred, prob = predict_fraud(transaction, threshold)
-                            results.append({
-                                'Index': idx,
-                                'Amount': row['Amount'],
-                                'Prediction': 'FRAUD' if pred == 1 else 'NORMAL',
-                                'Fraud_Probability': prob
-                            })
+                    # Progress bar
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
+                    
+                    import time
+                    start_time = time.time()
+                    
+                    results = []
+                    batch_size = 1000  # Process in batches for better progress tracking
+                    
+                    for idx, row in df_upload.iterrows():
+                        transaction = row.to_dict()
+                        if 'Class' in transaction:
+                            del transaction['Class']
+                        pred, prob = predict_fraud(transaction, threshold)
+                        results.append({
+                            'Index': idx,
+                            'Amount': row['Amount'],
+                            'Prediction': 'FRAUD' if pred == 1 else 'NORMAL',
+                            'Fraud_Probability': prob
+                        })
                         
-                        results_df = pd.DataFrame(results)
-                        
-                        # Summary
-                        fraud_count = sum(results_df['Prediction'] == 'FRAUD')
-                        normal_count = sum(results_df['Prediction'] == 'NORMAL')
-                        
-                        col1, col2, col3 = st.columns(3)
-                        col1.metric("Total Transaksi", len(results_df))
-                        col2.metric("Terdeteksi Fraud", fraud_count)
-                        col3.metric("Normal", normal_count)
-                        
-                        # Tabel hasil
-                        st.markdown("### Hasil Prediksi")
-                        st.dataframe(results_df, use_container_width=True)
-                        
+                        # Update progress every batch_size rows
+                        if (idx + 1) % batch_size == 0 or (idx + 1) == total_rows:
+                            progress = (idx + 1) / total_rows
+                            progress_bar.progress(progress)
+                            
+                            elapsed_time = time.time() - start_time
+                            estimated_total = elapsed_time / progress if progress > 0 else 0
+                            remaining_time = estimated_total - elapsed_time
+                            
+                            status_text.text(f"Processing: {idx + 1:,} / {total_rows:,} ({progress*100:.1f}%) | "
+                                           f"Elapsed: {elapsed_time:.0f}s | "
+                                           f"Remaining: ~{remaining_time:.0f}s")
+                    
+                    progress_bar.progress(1.0)
+                    status_text.text(f"✅ Selesai! Total waktu: {time.time() - start_time:.1f} detik")
+                    
+                    results_df = pd.DataFrame(results)
+                    
+                    # Summary
+                    fraud_count = sum(results_df['Prediction'] == 'FRAUD')
+                    normal_count = sum(results_df['Prediction'] == 'NORMAL')
+                    
+                    col1, col2, col3 = st.columns(3)
+                    col1.metric("Total Transaksi", len(results_df))
+                    col2.metric("Terdeteksi Fraud", fraud_count)
+                    col3.metric("Normal", normal_count)
+                    
+                    # Tabel hasil
+                    st.markdown("### Hasil Prediksi")
+                    st.dataframe(results_df, use_container_width=True)
+                    
                         # Download hasil
                         csv = results_df.to_csv(index=False)
                         st.download_button(
