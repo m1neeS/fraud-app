@@ -290,11 +290,11 @@ Dataset: [Open Database License (ODbL)](https://opendatacommons.org/licenses/odb
 
 **GitHub Repository:** [fraud-app](https://github.com/m1neeS/fraud-app)
 
-**Live Demo:** [Streamlit App - Coming Soon]
+**Live Demo:** [Streamlit App](https://fraud-app-m1nees.streamlit.app/)
 
 **Connect:**
 - GitHub: [@m1neeS](https://github.com/m1neeS)
-- LinkedIn: [Add your LinkedIn profile]
+- LinkedIn: [Muhamad Surhes Anggrhesta](https://www.linkedin.com/in/muhamadsurhes/)
 
 Untuk pertanyaan, saran, atau kolaborasi, silakan buka issue di GitHub atau hubungi melalui LinkedIn.
 
