@@ -201,7 +201,15 @@ Aplikasi web interaktif untuk mencoba model fraud detection secara real-time.
 
 ## 📋 Format Input CSV
 
-Untuk batch prediction, file CSV harus memiliki kolom berikut:
+### ⚠️ PENTING: Dataset Khusus
+
+Model ini **HANYA** dapat memprediksi dataset dari [Kaggle Credit Card Fraud Detection](https://www.kaggle.com/mlg-ulb/creditcardfraud).
+
+**Mengapa?** Fitur V1-V28 adalah hasil transformasi PCA yang spesifik untuk dataset ini. Model tidak dapat digunakan untuk dataset transaksi kartu kredit lain dengan format berbeda.
+
+### Format CSV yang Diperlukan:
+
+File CSV **HARUS** memiliki kolom berikut:
 
 ```csv
 Time,V1,V2,V3,...,V28,Amount
@@ -209,12 +217,26 @@ Time,V1,V2,V3,...,V28,Amount
 1.0,1.191857,0.266151,0.166480,...,0.014724,2.69
 ```
 
-**Kolom wajib:**
-- `Time`: Waktu transaksi (detik)
-- `V1` sampai `V28`: Fitur PCA
-- `Amount`: Jumlah transaksi
+**Kolom wajib (30 kolom):**
+- `Time`: Waktu transaksi dalam detik sejak transaksi pertama
+- `V1` sampai `V28`: Fitur hasil PCA (28 kolom)
+- `Amount`: Jumlah transaksi dalam mata uang
 
-**Catatan:** Kolom `Class` (label) opsional dan akan diabaikan jika ada.
+**Kolom opsional:**
+- `Class`: Label (0=Normal, 1=Fraud) - akan diabaikan jika ada
+
+### ❌ Tidak Dapat Digunakan Untuk:
+
+- Dataset transaksi kartu kredit dengan format asli (card_number, merchant, date, dll)
+- Dataset fraud detection lain dengan fitur berbeda
+- Data transaksi real-time dari sistem payment gateway
+- Dataset dengan format kolom yang berbeda
+
+### ✅ Cara Mendapatkan Dataset:
+
+1. Download dari [Kaggle](https://www.kaggle.com/mlg-ulb/creditcardfraud)
+2. Gunakan subset dari `creditcard.csv` untuk testing
+3. Pastikan kolom sesuai format di atas
 
 ## 🛠️ Tech Stack
 

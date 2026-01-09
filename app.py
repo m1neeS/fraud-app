@@ -189,6 +189,21 @@ with tab2:
     st.header("Batch Prediction")
     st.markdown("Upload file CSV untuk melakukan prediksi pada banyak transaksi sekaligus.")
     
+    # Warning untuk format dataset
+    st.warning("""
+    ⚠️ **PENTING - Format Dataset Khusus:**
+    
+    Model ini **HANYA** dapat memprediksi dataset dari [Kaggle Credit Card Fraud Detection](https://www.kaggle.com/mlg-ulb/creditcardfraud).
+    
+    CSV Anda **HARUS** memiliki kolom:
+    - `Time` (waktu transaksi dalam detik)
+    - `V1` sampai `V28` (fitur hasil PCA)
+    - `Amount` (jumlah transaksi)
+    - `Class` (opsional - akan diabaikan)
+    
+    ❌ **TIDAK BISA** digunakan untuk dataset transaksi kartu kredit biasa dengan format lain.
+    """)
+    
     uploaded_file = st.file_uploader("Upload CSV", type=['csv'])
     
     if uploaded_file is not None:
